@@ -1,10 +1,27 @@
-# Macro
-Record every key you press and replay the actions to automate monotonous tasks.
+# Macro Studio
+Macro Studio is a desktop automation app for recording and replaying input macros. Use it to capture keyboard actions (and related automation steps), review and edit the sequence, then play it back to automate repetitive tasks.
 
-# How to use:
- - Start Macro.exe and do the stuff you want to have recorded.
- - Press ESC. The SaveAs-Dialog appears.
- - Select where to save and the name of your macro.
- - Modify your marco if needed.
- - Drag your macro on MacroExec.exe / open your recorded marco with MacroExec.exe
- - Watch the computer work. You can cancel the execution with ESC.
+## What this project is
+- A Windows desktop application (UI in `src/MacroStudio`)
+- Core automation/recording logic in `src/MacroStudio.Core`
+- MVVM infrastructure and view-model helpers in `src/MacroStudio.MVVM`
+
+## Key features
+- Record input actions into a macro
+- Edit recorded actions (reorder, remove, adjust)
+- Replay macros to automate monotonous workflows
+
+## Repository layout
+- `src/MacroStudio` – UI application
+- `src/MacroStudio.Core` – core/recording/playback logic
+- `src/MacroStudio.MVVM` – MVVM helpers
+- `src/MacroStudio.Tests` – automated tests
+
+## Build
+This repo targets .NET 10.
+
+From the `src/` directory:
+- Build: `dotnet build`
+- Run: `dotnet run -c Release`
+- Test: `dotnet test`
+

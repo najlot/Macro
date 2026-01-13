@@ -1,0 +1,13 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../.gitignore" />
+    <File Path="../LICENSE" />
+    <File Path="../README.md" />
+  </Folder>
+  <Folder Name="/Tests/">
+    <Project Path="MacroStudio.Tests/MacroStudio.Tests.csproj" Id="94a07fbd-4f34-43ed-a7fa-75950c3d46de" />
+  </Folder>
+  <Project Path="MacroStudio.Core/MacroStudio.Core.csproj" />
+  <Project Path="MacroStudio.MVVM/MacroStudio.MVVM.csproj" />
+  <Project Path="MacroStudio/MacroStudio.csproj" />
+</Solution>
