@@ -1,3 +1,4 @@
+using MacroStudio.ViewModels;
 using System.IO;
 using System.IO.Compression;
 
@@ -5,9 +6,12 @@ namespace MacroStudio.Execution;
 
 public static class MacroFile
 {
-	public static async Task<(string Code, int Executions)> ReadAsync(string filePath)
+	public static async Task<(string Code, int Executions, ResourceViewModel[] Resources)> ReadAsync(string filePath)
 	{
-		if (string.IsNullOrWhiteSpace(filePath))
+		ResourceViewModel[] resources = [];
+
+
+        if (string.IsNullOrWhiteSpace(filePath))
 		{
 			throw new ArgumentException("File path is required.", nameof(filePath));
 		}
@@ -20,7 +24,24 @@ public static class MacroFile
 		using (var versionReader = new StreamReader(versionStream))
 		{
 			var version = await versionReader.ReadToEndAsync();
-			if (!version.StartsWith("1", StringComparison.Ordinal))
+			if (version.StartsWith('2')) // Version 2 supports resources (Bitmaps)
+            {
+                archive.Entries
+					.Where(e => e.FullName.StartsWith("resources/", StringComparison.OrdinalIgnoreCase))
+					.ToList()
+					.ForEach(e =>
+					{
+						using var resourceStream = e.Open();
+						using var memoryStream = new MemoryStream();
+						resourceStream.CopyTo(memoryStream);
+						resources = resources.Append(new ResourceViewModel
+						{
+							Name = Path.GetFileName(e.FullName),
+							Value = memoryStream.ToArray()
+						}).ToArray();
+					});
+            }
+			else if (!version.StartsWith('1'))
 			{
 				throw new InvalidDataException("Invalid version");
 			}
@@ -37,12 +58,12 @@ public static class MacroFile
 		var executionsEntry = archive.GetEntry("executions");
 		if (executionsEntry is null)
 		{
-			return (code, 1);
+			return (code, 1, resources);
 		}
 
 		using var executionsStream = executionsEntry.Open();
 		using var executionsReader = new StreamReader(executionsStream);
 		var executionsText = await executionsReader.ReadToEndAsync();
-		return int.TryParse(executionsText, out var executions) ? (code, executions) : (code, 1);
+		return int.TryParse(executionsText, out var executions) ? (code, executions, resources) : (code, 1, resources);
 	}
 }

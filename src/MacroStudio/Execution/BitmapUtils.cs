@@ -5,10 +5,11 @@ namespace MacroStudio.Execution;
 
 public static class BitmapUtils
 {
-	public static Bitmap GetBitmap(string path)
+	public static Bitmap GetBitmap(byte[] bytes)
 	{
-		var bytes = File.ReadAllBytes(path);
 		using var str = new MemoryStream(bytes);
 		return new Bitmap(Bitmap.FromStream(str));
 	}
+
+    public static Bitmap GetBitmap(string path) => GetBitmap(File.ReadAllBytes(path));
 }

@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 			 xmlns:AvalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
+             xmlns:adonisUi="clr-namespace:AdonisUI;assembly=AdonisUI"
 			 xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
              xmlns:local="clr-namespace:MacroStudio.Views"
 			 xmlns:behaviors="clr-namespace:MacroStudio.Behaviors"
@@ -17,10 +18,28 @@
 			</WrapPanel>
 			<WrapPanel HorizontalAlignment="Right">
 				<Label Content="Executions: " Margin="0,10" />
-				<TextBox Text="{Binding Executions}" Margin="5" />
+				<TextBox Text="{Binding Executions}" Margin="5" MinWidth="50" />
 				<Button Command="{Binding RunCommand}" Content="Run" Margin="5" Padding="10,5" IsEnabled="{Binding IsRunButtonEnabled}" />
 			</WrapPanel>
 		</Grid>
+
+        <Border DockPanel.Dock="Right" BorderThickness="1" BorderBrush="{DynamicResource {x:Static adonisUi:Brushes.Layer1BorderBrush}}">
+            <DockPanel MinWidth="200">
+                <Label Content="Ressources:" Margin="5" DockPanel.Dock="Top" />
+                <Button Content="Add" Command="{Binding AddResourceCommand}" Margin="5" DockPanel.Dock="Bottom" />
+                <ItemsControl ItemsSource="{Binding Resources}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="7,2,3,1">
+                                <TextBlock Text="{Binding Name}" MinWidth="150" />
+                                <Button Content="Remove"
+                                        Command="{Binding DataContext.RemoveResourceCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </DockPanel>
+        </Border>
 
 		<AvalonEdit:TextEditor DockPanel.Dock="Top" Name="Code" ShowLineNumbers="True" SyntaxHighlighting="C#" >
 			<i:Interaction.Behaviors>

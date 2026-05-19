@@ -5,7 +5,9 @@ namespace MacroStudio.Execution;
 
 public class ScriptGlobals
 {
-	public string GetClipboardText() => ClipboardUtils.GetClipboardText();
+    internal Dictionary<string, byte[]> Resources { get; } = [];
+
+    public string GetClipboardText() => ClipboardUtils.GetClipboardText();
 	public void SetClipboardText(string text) => ClipboardUtils.SetClipboardText(text);
 
 	public void Wait(int milliseconds) => WaitMiliseconds(milliseconds);
@@ -18,7 +20,10 @@ public class ScriptGlobals
 	public void Simulate(int key, int x, int y, int waitTime) => SimulationUtils.Simulate(key, x, y, waitTime);
 
 	public Bitmap GetScreenshot() => DesktopWindow.GetScreenshot();
-	public Bitmap GetBitmap(string path) => BitmapUtils.GetBitmap(path);
+
+    public Bitmap GetResourceBitmap(string name) => BitmapUtils.GetBitmap(Resources[name]);
+
+    public Bitmap GetBitmap(string path) => BitmapUtils.GetBitmap(path);
 
 	public Rectangle SearchBitmap(Bitmap smallBmp, Bitmap bigBmp, double tolerance, int startX = 0, int startY = 0)
 		=> BitmapFinder.SearchBitmap(smallBmp, bigBmp, tolerance, startX, startY);

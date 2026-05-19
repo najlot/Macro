@@ -31,6 +31,13 @@ Bitmap GetScreenshot();
 Bitmap GetBitmap(string path);
 
 /// <summary>
+/// Loads a bitmap image of the specified resource.
+/// </summary>
+/// <param name=""path"">The name of the resourcep.</param>
+/// <returns>The loaded <see cref=""Bitmap""/>.</returns>
+Bitmap GetResourceBitmap(string name);
+
+/// <summary>
 /// Saves a bitmap image to the specified file path.
 /// </summary>
 /// <param name=""path"">The destination file path.</param>

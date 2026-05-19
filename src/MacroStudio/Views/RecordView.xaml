@@ -42,5 +42,9 @@
 		<Button
 			Grid.Column="1" Grid.Row="2"
 			Content="Record" Command="{Binding StartRecordingCommand}" IsEnabled="{Binding IsRecordEnabled}" />
-	</Grid>
+
+        <Button
+			Grid.Column="0" Grid.Row="2" Margin="5,0,0,0" HorizontalAlignment="Left"
+			Content="Save Screenshot" Command="{Binding SaveScreenshotCommand}" />
+    </Grid>
 </UserControl>

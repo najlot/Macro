@@ -4,8 +4,15 @@ using System.Windows.Input;
 using System.Windows;
 using MacroStudio.Execution;
 using System.IO;
+using System.Collections.ObjectModel;
 
 namespace MacroStudio.ViewModels;
+
+public class ResourceViewModel : AbstractViewModel
+{
+    public string Name { get => field; set => Set(ref field, value); } = string.Empty;
+    public byte[] Value { get; set; } = [];
+}
 
 public class ExecuteViewModel : AbstractViewModel, ITabItem
 {
@@ -28,11 +35,16 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 	public int Executions { get => field; set => Set(ref field, value); } = 1;
     public bool IsRunButtonEnabled { get => field; set => Set(ref field, value); } = true;
 
+	public ObservableCollection<ResourceViewModel> Resources { get; } = [];
+
     public ICommand RunCommand { get; }
 	public ICommand SaveCommand { get; }
 	public ICommand LoadCommand { get; }
 
-	private readonly Action<bool> _showMainWindow;
+    public ICommand AddResourceCommand { get; }
+    public ICommand RemoveResourceCommand { get; }
+
+    private readonly Action<bool> _showMainWindow;
 
 	public ExecuteViewModel(Action<bool> showMainWindow)
 	{
@@ -50,7 +62,11 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 		LoadCommand = new AsyncCommand(
 			LoadAsync,
 			task => ShowErrorAsync(task.Exception));
-	}
+
+        AddResourceCommand = new RelayCommand(AddResource);
+        RemoveResourceCommand = new RelayCommand<ResourceViewModel>(RemoveResource);
+
+    }
 
 	private Task ShowErrorAsync(Exception? ex)
 	{
@@ -58,9 +74,50 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 		return Task.CompletedTask;
 	}
 
-	private async Task SaveAsync()
+	private void AddResource()
 	{
-		var openFileDialog = new Microsoft.Win32.SaveFileDialog
+		var openFileDialog = new Microsoft.Win32.OpenFileDialog()
+		{
+            DefaultExt = ".bmp",
+            Filter = "Images (*.bmp)|*.bmp",
+            FilterIndex = 1,
+            RestoreDirectory = true,
+		};
+
+        if (openFileDialog.ShowDialog() ?? false)
+		{
+			try
+			{
+				var filePath = openFileDialog.FileName;
+				var name = Path.GetFileNameWithoutExtension(filePath);
+				var value = File.ReadAllBytes(filePath);
+
+				int count = 1;
+				var newName = name;
+
+				while (Resources.Any(r => r.Name.Equals(newName, StringComparison.OrdinalIgnoreCase)))
+				{
+					count++;
+                    newName = name + " " + count;
+                }
+
+				Resources.Add(new ResourceViewModel { Name = newName, Value = value });
+			}
+			catch (Exception ex)
+			{
+				MessageBox.Show(ex.Message);
+            }
+        }
+    }
+
+    private void RemoveResource(ResourceViewModel vm)
+    {
+        Resources.Remove(vm);
+    }
+
+    private async Task SaveAsync()
+	{
+		var saveFileDialog = new Microsoft.Win32.SaveFileDialog
 		{
 			DefaultExt = ".macro",
 			FileName = "new.macro",
@@ -69,9 +126,9 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 			RestoreDirectory = true
 		};
 
-		if (openFileDialog.ShowDialog() ?? false)
+		if (saveFileDialog.ShowDialog() ?? false)
 		{
-			using var zipStream = new FileStream(openFileDialog.FileName, FileMode.Create);
+			using var zipStream = new FileStream(saveFileDialog.FileName, FileMode.Create);
 			using var archive = new System.IO.Compression.ZipArchive(zipStream, System.IO.Compression.ZipArchiveMode.Create);
 
 			{
@@ -85,7 +142,7 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 				var versionEntry = archive.CreateEntry("version", System.IO.Compression.CompressionLevel.NoCompression);
 				using var versionStream = versionEntry.Open();
 				using var versionWriter = new StreamWriter(versionStream);
-				await versionWriter.WriteAsync("1");
+				await versionWriter.WriteAsync("2");
 			}
 
 			{
@@ -94,7 +151,14 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 				using var executionsWriter = new StreamWriter(executionsStream);
 				await executionsWriter.WriteAsync(Executions.ToString());
 			}
-		}
+
+			foreach (var resource in Resources)
+			{
+				var resourceEntry = archive.CreateEntry("resources/" + resource.Name, System.IO.Compression.CompressionLevel.Optimal);
+				using var resourceStream = resourceEntry.Open();
+				await resourceStream.WriteAsync(resource.Value, 0, resource.Value.Length);
+            }
+        }
 	}
 
 	private async Task LoadAsync()
@@ -121,10 +185,15 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 
 		try
 		{
-			var (code, executions) = await MacroFile.ReadAsync(filePath);
+			var (code, executions, resources) = await MacroFile.ReadAsync(filePath);
 			Code = code;
 			Executions = executions;
-		}
+
+			foreach (var resource in resources)
+			{
+				Resources.Add(resource);
+            }
+        }
 		catch (Exception ex)
 		{
 			MessageBox.Show(ex.Message);
@@ -140,7 +209,13 @@ public class ExecuteViewModel : AbstractViewModel, ITabItem
 				IsRunButtonEnabled = false;
 
 				var globals = new ScriptGlobals();
-				var runner = ExecutionUtils.GetRunner(Code);
+				
+				foreach (var resource in Resources)
+				{
+					globals.Resources[resource.Name] = resource.Value;
+                }
+
+                var runner = ExecutionUtils.GetRunner(Code);
 
 				if (runner is null)
 				{

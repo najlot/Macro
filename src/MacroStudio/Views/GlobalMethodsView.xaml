@@ -9,8 +9,19 @@
 			 xmlns:AvalonEdit="http://icsharpcode.net/sharpdevelop/avalonedit"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-		<AvalonEdit:TextEditor Name="Code" SyntaxHighlighting="C#" IsReadOnly="True">
+	<Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition Height="Auto"/>
+			<RowDefinition Height="*"/>
+		</Grid.RowDefinitions>
+
+		<TextBox x:Name="SearchBox"
+				 Grid.Row="0"
+				 Margin="8"
+				 VerticalAlignment="Center"
+				 TextChanged="SearchBox_OnTextChanged"/>
+
+		<AvalonEdit:TextEditor Name="Code" Grid.Row="1" SyntaxHighlighting="C#" IsReadOnly="True">
 			<i:Interaction.Behaviors>
 				<behaviors:TextEditorBehavior BindedText="{Binding Code, Mode=OneTime, UpdateSourceTrigger=PropertyChanged}"/>
 			</i:Interaction.Behaviors>

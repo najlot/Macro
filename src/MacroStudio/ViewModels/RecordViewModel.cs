@@ -29,9 +29,41 @@ public class RecordViewModel : AbstractViewModel, ITabItem
 			IsRecordEnabled = false;
 			await Task.Run(OnStartRecording);
 		});
-	}
 
-	public string Code
+        SaveScreenshotCommand = new RelayCommand(SaveScreenshot);
+    }
+
+	private void SaveScreenshot()
+	{
+		var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+		{
+            DefaultExt = ".bmp",
+            Filter = "Images (*.bmp)|*.bmp",
+            FilterIndex = 1,
+            RestoreDirectory = true,
+        };
+
+		if (saveFileDialog.ShowDialog() == true)
+		{
+			var filePath = saveFileDialog.FileName;
+            using var screenshot = DesktopWindow.GetScreenshot();
+			screenshot.Save(filePath);
+
+            // Open in MS-Paint for editing
+            var process = new Process
+            {
+                StartInfo = new ProcessStartInfo("mspaint.exe")
+                {
+                    UseShellExecute = true,
+                }
+            };
+
+            process.StartInfo.ArgumentList.Add(filePath);
+            process.Start();
+        }
+    }
+
+    public string Code
 	{
 		get => field;
 		set => Set(ref field, value);
@@ -44,6 +76,7 @@ public class RecordViewModel : AbstractViewModel, ITabItem
 	} = true;
 
 	public RelayCommand StartRecordingCommand { get; }
+	public RelayCommand SaveScreenshotCommand { get; }
 
 	private void ListenForStopAction(object? _)
 	{

@@ -88,6 +88,7 @@ string GetClipboardText(){return default;}
 void SetClipboardText(string text){}
 Bitmap GetScreenshot(){return default;}
 Bitmap GetBitmap(string path){return default;}
+Bitmap GetResourceBitmap(string name){return default;}
 void SaveBitmap(string path, Bitmap bitmap){}
 bool HasBitmap(Bitmap smallBmp, Bitmap bigBmp, int startX = 0, int startY = 0){return default;}
 bool HasBitmap(Bitmap smallBmp, Bitmap bigBmp, double tolerance, int startX = 0, int startY = 0){return default;}
