@@ -16,9 +16,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\MacroStudio.App\MacroStudio.App.csproj" />
     <ProjectReference Include="..\MacroStudio.Core\MacroStudio.Core.csproj" />
     <ProjectReference Include="..\MacroStudio.MVVM\MacroStudio.MVVM.csproj" />
-    <ProjectReference Include="..\MacroStudio\MacroStudio.csproj" />
   </ItemGroup>
 
   <ItemGroup>

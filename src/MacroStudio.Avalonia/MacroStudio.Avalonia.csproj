@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+	</PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Avalonia" Version="11.2.5" />
+		<PackageReference Include="Avalonia.AvaloniaEdit" Version="11.4.1" />
+		<PackageReference Include="Avalonia.Desktop" Version="11.2.5" />
+		<PackageReference Include="Avalonia.Themes.Fluent" Version="11.2.5" />
+		<PackageReference Include="Tmds.DBus.Protocol" Version="0.94.0" />
+	</ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MacroStudio.App\MacroStudio.App.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+		<ProjectReference Include="..\MacroStudio.Backend.Linux\MacroStudio.Backend.Linux.csproj" />
+	</ItemGroup>
+	<ItemGroup Condition="'$(TargetFramework)' == 'net10.0-windows'">
+		<ProjectReference Include="..\MacroStudio.Backend.Windows\MacroStudio.Backend.Windows.csproj" />
+	</ItemGroup>
+</Project>

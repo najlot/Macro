@@ -1,4 +1,4 @@
-﻿using MacroStudio.Execution;
+﻿using MacroStudio.App.Services;
 using System.IO.Compression;
 
 namespace MacroStudio.Tests;
@@ -8,6 +8,7 @@ public class MacroFileTests
 	[Fact]
 	public async Task ReadAsync_WithValidMacro_ReturnsCodeAndExecutions()
 	{
+		var service = new MacroFileService();
 		var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".macro");
 		try
 		{
@@ -19,9 +20,10 @@ public class MacroFileTests
 				await WriteEntryAsync(archive, "executions", "3");
 			}
 
-			var (code, executions) = await MacroFile.ReadAsync(path);
-			Assert.Equal("Console.WriteLine(\"hi\");", code);
-			Assert.Equal(3, executions);
+			var document = await service.LoadAsync(path);
+			Assert.Equal("Console.WriteLine(\"hi\");", document.Code);
+			Assert.Equal(3, document.Executions);
+			Assert.Empty(document.Resources);
 		}
 		finally
 		{
@@ -35,6 +37,7 @@ public class MacroFileTests
 	[Fact]
 	public async Task ReadAsync_WithoutExecutions_DefaultsToOne()
 	{
+		var service = new MacroFileService();
 		var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + ".macro");
 		try
 		{
@@ -45,8 +48,10 @@ public class MacroFileTests
 				await WriteEntryAsync(archive, "code", "x");
 			}
 
-			var (_, executions) = await MacroFile.ReadAsync(path);
-			Assert.Equal(1, executions);
+			var document = await service.LoadAsync(path);
+			Assert.Equal(1, document.Executions);
+			Assert.Equal("x", document.Code);
+			Assert.Empty(document.Resources);
 		}
 		finally
 		{

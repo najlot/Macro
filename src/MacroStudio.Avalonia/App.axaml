@@ -1,0 +1,25 @@
+<Application xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:viewModels="using:MacroStudio.App.ViewModels"
+			 xmlns:views="using:MacroStudio.Avalonia.Views"
+			 x:Class="MacroStudio.Avalonia.App"
+			 RequestedThemeVariant="Dark">
+	<Application.Styles>
+		<FluentTheme />
+		<StyleInclude Source="avares://AvaloniaEdit/Themes/Fluent/AvaloniaEdit.xaml" />
+	</Application.Styles>
+	<Application.DataTemplates>
+		<DataTemplate DataType="viewModels:RecordViewModel">
+			<views:RecordView />
+		</DataTemplate>
+		<DataTemplate DataType="viewModels:ExecuteViewModel">
+			<views:ExecuteView />
+		</DataTemplate>
+		<DataTemplate DataType="viewModels:InspectViewModel">
+			<views:InspectView />
+		</DataTemplate>
+		<DataTemplate DataType="viewModels:GlobalMethodsViewModel">
+			<views:GlobalMethodsView />
+		</DataTemplate>
+	</Application.DataTemplates>
+</Application>

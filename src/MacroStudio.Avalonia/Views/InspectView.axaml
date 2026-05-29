@@ -1,0 +1,23 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 x:Class="MacroStudio.Avalonia.Views.InspectView">
+	<Grid Margin="20" RowDefinitions="Auto,Auto,Auto,*">
+		<Border Padding="16" Background="#101927" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<StackPanel Spacing="8">
+				<TextBlock Text="Cursor Position" FontSize="18" FontWeight="SemiBold" />
+				<TextBlock Text="{Binding CursorPosition}" FontSize="16" />
+				<TextBlock Text="{Binding CursorControlSupportMessage}" TextWrapping="Wrap" Foreground="#C9D5EA" />
+			</StackPanel>
+		</Border>
+
+		<Border Grid.Row="1" Padding="16" Margin="0,14,0,0" Background="#162338" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<Grid ColumnDefinitions="Auto,100,Auto,100,Auto,*">
+				<TextBlock Grid.Column="0" Text="X" VerticalAlignment="Center" />
+				<TextBox Grid.Column="1" Text="{Binding XPos, Mode=TwoWay}" Margin="10,0,0,0" />
+				<TextBlock Grid.Column="2" Text="Y" VerticalAlignment="Center" Margin="10,0,0,0" />
+				<TextBox Grid.Column="3" Text="{Binding YPos, Mode=TwoWay}" Margin="10,0,0,0" />
+				<Button Grid.Column="4" Content="Move Cursor" Command="{Binding SetCursorPositionCommand}" IsEnabled="{Binding IsCursorControlSupported}" Margin="10,0,0,0" />
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

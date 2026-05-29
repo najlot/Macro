@@ -9,5 +9,8 @@
   </Folder>
   <Project Path="MacroStudio.Core/MacroStudio.Core.csproj" />
   <Project Path="MacroStudio.MVVM/MacroStudio.MVVM.csproj" />
-  <Project Path="MacroStudio/MacroStudio.csproj" />
+  <Project Path="MacroStudio.App/MacroStudio.App.csproj" />
+  <Project Path="MacroStudio.Backend.Linux/MacroStudio.Backend.Linux.csproj" />
+  <Project Path="MacroStudio.Backend.Windows/MacroStudio.Backend.Windows.csproj" />
+  <Project Path="MacroStudio.Avalonia/MacroStudio.Avalonia.csproj" />
 </Solution>

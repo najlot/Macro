@@ -1,0 +1,53 @@
+
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 xmlns:editor="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+			 x:Class="MacroStudio.Avalonia.Views.ExecuteView"
+			 x:Name="ExecuteViewRoot">
+	<Grid Margin="20" ColumnDefinitions="3*,1.35*" RowDefinitions="*,Auto">
+		<Border Grid.Row="0" Grid.Column="0" Padding="14" Background="#101927" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<editor:TextEditor Name="CodeEditor"
+						  ShowLineNumbers="True"
+						  FontFamily="Consolas"
+						  FontSize="14"
+						  Background="#0B1220"
+						  Foreground="#EEF4FF"
+						  HorizontalScrollBarVisibility="Auto"
+						  VerticalScrollBarVisibility="Auto" />
+		</Border>
+
+		<StackPanel Grid.Row="0" Grid.Column="1" Spacing="12" Margin="18,0,0,0">
+			<Border Padding="14" Background="#162338" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+				<StackPanel Spacing="10">
+					<TextBlock Text="Resources" FontSize="18" FontWeight="SemiBold" />
+					<Button Content="Add Resource" Command="{Binding AddResourceCommand}" />
+					<ListBox ItemsSource="{Binding Resources}" MaxHeight="360">
+						<ListBox.ItemTemplate>
+							<DataTemplate>
+								<Grid ColumnDefinitions="*,Auto">
+									<TextBlock Text="{Binding Name}" VerticalAlignment="Center" TextWrapping="Wrap" Margin="0,0,8,0" />
+									<Button Grid.Column="1"
+											Content="Remove"
+											Command="{Binding DataContext.RemoveResourceCommand, ElementName=ExecuteViewRoot}"
+											CommandParameter="{Binding}" />
+								</Grid>
+							</DataTemplate>
+						</ListBox.ItemTemplate>
+					</ListBox>
+					<TextBlock Text="{Binding RunSupportMessage}" TextWrapping="Wrap" Foreground="#C9D5EA" />
+				</StackPanel>
+			</Border>
+		</StackPanel>
+
+		<Border Grid.Row="1" Grid.ColumnSpan="2" Padding="14" Margin="0,14,0,0" Background="#162338" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<Grid ColumnDefinitions="Auto,Auto,*,Auto,Auto,Auto">
+				<Button Grid.Column="0" Content="Save" Command="{Binding SaveCommand}" MinWidth="100" />
+				<Button Grid.Column="1" Content="Load" Command="{Binding LoadCommand}" MinWidth="100" Margin="10,0,0,0" />
+				<TextBlock Grid.Column="2" Text="{Binding RunStatusMessage}" TextWrapping="Wrap" VerticalAlignment="Center" Foreground="#D9E6FF" Margin="18,0,18,0" />
+				<TextBlock Grid.Column="3" Text="Executions" VerticalAlignment="Center" />
+				<TextBox Grid.Column="4" Text="{Binding Executions, Mode=TwoWay}" Width="80" HorizontalContentAlignment="Center" Margin="10,0,0,0" />
+				<Button Grid.Column="5" Content="{Binding RunButtonText}" Command="{Binding RunCommand}" MinWidth="120" IsEnabled="{Binding CanRun}" Margin="10,0,0,0" />
+			</Grid>
+		</Border>
+	</Grid>
+</UserControl>

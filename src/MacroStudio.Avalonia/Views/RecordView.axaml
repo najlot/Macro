@@ -1,0 +1,27 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 x:Class="MacroStudio.Avalonia.Views.RecordView">
+	<Grid Margin="20" ColumnDefinitions="*,Auto" RowDefinitions="Auto,*,Auto">
+		<Border Grid.Row="0" Grid.ColumnSpan="2" Padding="16" Background="#162338" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<TextBlock Text="Press Record to hide the window and start listening for input. Press ESC to stop."
+					   TextWrapping="Wrap" />
+		</Border>
+
+		<Border Grid.Row="1" Grid.ColumnSpan="2" Padding="14" Margin="0,14,0,0" Background="#101927" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<TextBox Text="{Binding Code}"
+					 IsReadOnly="True"
+					 AcceptsReturn="True"
+					 TextWrapping="NoWrap"
+					 FontFamily="Consolas"
+					 FontSize="14" />
+		</Border>
+
+		<StackPanel Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Spacing="12" VerticalAlignment="Center" Margin="0,14,0,0">
+			<Button Content="Save Screenshot" Command="{Binding SaveScreenshotCommand}" IsEnabled="{Binding IsRecordingSupported}" />
+			<CheckBox Content="Verbose" IsChecked="{Binding Verbose, Mode=TwoWay}" />
+			<TextBlock Text="{Binding RecordingSupportMessage}" VerticalAlignment="Center" Foreground="#C9D5EA" TextWrapping="Wrap" MaxWidth="520" />
+		</StackPanel>
+
+		<Button Grid.Row="2" Grid.Column="1" Content="Record" Command="{Binding StartRecordingCommand}" MinWidth="120" IsEnabled="{Binding IsRecordingSupported}" Margin="12,14,0,0" />
+	</Grid>
+</UserControl>

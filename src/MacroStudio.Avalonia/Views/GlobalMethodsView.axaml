@@ -1,0 +1,90 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			 x:Class="MacroStudio.Avalonia.Views.GlobalMethodsView">
+	<Grid Margin="20" ColumnDefinitions="1.05*,1.35*" RowDefinitions="Auto,*">
+		<Border Grid.Row="0" Grid.ColumnSpan="2" Padding="18" Background="#162338" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<Grid ColumnDefinitions="*,260,220" RowDefinitions="Auto,Auto">
+				<StackPanel Grid.Column="0" Spacing="6">
+					<TextBlock Text="Built-in Functions" FontSize="24" FontWeight="SemiBold" />
+					<TextBlock Text="Search by name, purpose, or keyword to find the right helper faster." Foreground="#C9D5EA" TextWrapping="Wrap" />
+				</StackPanel>
+
+				<TextBox Grid.Column="1"
+						 Text="{Binding SearchText, Mode=TwoWay}"
+						 Watermark="Search functions or keywords"
+						 VerticalAlignment="Center"
+						 Margin="18,0,0,0" />
+
+				<ComboBox Grid.Column="2"
+					  ItemsSource="{Binding Categories}"
+					  SelectedItem="{Binding SelectedCategory, Mode=TwoWay}"
+					  VerticalAlignment="Center"
+					  Margin="12,0,0,0" />
+
+				<TextBlock Grid.Row="1" Grid.ColumnSpan="3" Text="{Binding ResultSummary}" Margin="0,14,0,0" Foreground="#D9E6FF" />
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="1" Grid.Column="0" Padding="14" Margin="0,14,14,0" Background="#101927" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<Grid>
+				<ListBox ItemsSource="{Binding FilteredFunctions}" SelectedItem="{Binding SelectedFunction, Mode=TwoWay}" IsVisible="{Binding HasResults}">
+					<ListBox.ItemTemplate>
+						<DataTemplate>
+							<Border Padding="12" Margin="0,0,0,8" Background="#162338" BorderBrush="#26344D" BorderThickness="1" CornerRadius="10">
+								<Grid RowDefinitions="Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+									<TextBlock Text="{Binding Name}" FontSize="16" FontWeight="SemiBold" />
+									<Border Grid.Column="1" Padding="10,4" Margin="12,0,0,0" Background="#21324C" CornerRadius="999">
+										<TextBlock Text="{Binding Category}" FontSize="12" Foreground="#B8D8FF" />
+									</Border>
+									<TextBlock Grid.Row="1" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding Summary}" TextWrapping="Wrap" Foreground="#D3DDF0" />
+									<TextBlock Grid.Row="2" Grid.ColumnSpan="2" Margin="0,8,0,0" Text="{Binding PrimarySignature}" FontFamily="Consolas" FontSize="12" Foreground="#8FB7E6" TextWrapping="Wrap" />
+								</Grid>
+							</Border>
+						</DataTemplate>
+					</ListBox.ItemTemplate>
+				</ListBox>
+
+				<Border IsVisible="{Binding HasNoResults}" Background="#162338" BorderBrush="#26344D" BorderThickness="1" CornerRadius="10" Padding="18">
+					<TextBlock Text="{Binding EmptyStateMessage}" TextWrapping="Wrap" Foreground="#D9E6FF" />
+				</Border>
+			</Grid>
+		</Border>
+
+		<Border Grid.Row="1" Grid.Column="1" Padding="18" Margin="0,14,0,0" Background="#101927" BorderBrush="#2D3A53" BorderThickness="1" CornerRadius="12">
+			<ScrollViewer VerticalScrollBarVisibility="Auto">
+				<StackPanel Spacing="14">
+					<TextBlock Text="{Binding SelectedFunctionName}" FontSize="24" FontWeight="SemiBold" />
+					<TextBlock Text="{Binding SelectedFunctionCategory}" Foreground="#8CC9FF" FontWeight="SemiBold" IsVisible="{Binding HasSelectedFunction}" />
+					<TextBlock Text="{Binding SelectedFunctionSummary}" TextWrapping="Wrap" Foreground="#E6EEF9" />
+
+					<ItemsControl ItemsSource="{Binding SelectedFunctionKeywords}" IsVisible="{Binding HasSelectedFunction}">
+						<ItemsControl.ItemsPanel>
+							<ItemsPanelTemplate>
+								<WrapPanel />
+							</ItemsPanelTemplate>
+						</ItemsControl.ItemsPanel>
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Padding="8,4" Margin="0,0,8,8" Background="#1D2C44" CornerRadius="999">
+									<TextBlock Text="{Binding}" FontSize="12" Foreground="#CAE1FF" />
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+
+					<TextBlock Text="{Binding SignatureSectionTitle}" FontSize="16" FontWeight="SemiBold" Margin="0,6,0,0" IsVisible="{Binding HasSelectedFunction}" />
+
+					<ItemsControl ItemsSource="{Binding SelectedFunctionSignatures}" IsVisible="{Binding HasSelectedFunction}">
+						<ItemsControl.ItemTemplate>
+							<DataTemplate>
+								<Border Padding="12" Margin="0,0,0,10" Background="#162338" BorderBrush="#26344D" BorderThickness="1" CornerRadius="10">
+									<TextBlock Text="{Binding}" FontFamily="Consolas" FontSize="13" TextWrapping="Wrap" Foreground="#F2F7FF" />
+								</Border>
+							</DataTemplate>
+						</ItemsControl.ItemTemplate>
+					</ItemsControl>
+				</StackPanel>
+			</ScrollViewer>
+		</Border>
+	</Grid>
+</UserControl>
